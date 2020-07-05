@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
-
+{% from "macros.html" import display_form_field %}
 {% block content %}
 <h2>Log In</h2>
-<form>
-<div>{{ form.email.label }} {{ form.email }}</div>
-<div>{{ form.password.label }} {{ form.password }}</div>
+<form method="POST" action="{{ url_for('login') }}">
+    {{ form.hidden_tag() }}
+    {{ display_form_field(form.email) }}
+    {{ display_form_field(form.password) }}
     <div>{{ form.submit }}</div>
 </form>
 {% endblock %}
