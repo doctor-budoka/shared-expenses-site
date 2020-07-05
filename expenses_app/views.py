@@ -1,5 +1,5 @@
 from flask import current_app as app, render_template, redirect, url_for, make_response, flash
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required, logout_user
 from expenses_app.forms import LogInForm, Register
 from expenses_app.models import db, AuthorisedEmail, User
 from expenses_app import login_manager
@@ -51,6 +51,13 @@ def register():
         else:
             flash("Email is not an authorised email! This is a private service.")
     return render_template("register.html", form=form)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
 
 
 @login_manager.user_loader
