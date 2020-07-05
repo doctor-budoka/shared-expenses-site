@@ -3,4 +3,5 @@ flask-wtf
 flask-sqlalchemy
 flask-login
 wtforms
+wtforms[email]
 python-dotenv
