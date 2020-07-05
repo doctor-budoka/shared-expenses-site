@@ -1,4 +1,4 @@
-from flask import current_app as app, render_template, redirect, url_for, make_response
+from flask import current_app as app, render_template, redirect, url_for, make_response, flash
 from expenses_app.forms import LogInForm, Register
 from expenses_app.models import db, AuthorisedEmail, User
 
@@ -17,12 +17,12 @@ def login():
         email = AuthorisedEmail.query.filter(AuthorisedEmail.email == email).first()
         if email and email.user and email.user.check_password(password):
             user = email.user
-            if user and user.check_password(password):
-                # TODO: log the user in
-                return redirect(url_for("index"))
+            # TODO: log the user in
+            return redirect(url_for("index"))
         else:
-            # TODO: Limit number of retries, possibly redirect back to the page again
-            return make_response("Invalid email or password!", 400)
+            # TODO: Limit number of retries
+            flash("Invalid email or password!")
+
     return render_template("login.html", form=form)
 
 
@@ -33,8 +33,7 @@ def register():
         email = form.email.data
         auth_email = AuthorisedEmail.query.filter_by(email=email).first()
         if auth_email and auth_email.is_registered:
-            # TODO: Handle these errors more nicely
-            return make_response("You are already registered! Try logging in instead!", 400)
+            flash("You are already registered! Try logging in instead!")
         elif auth_email:
             password = form.password.data
             if User.register_user(auth_email, password):
@@ -44,6 +43,5 @@ def register():
                 # TODO: Handle these errors more nicely
                 return make_response("Something went wrong with registration!", 500)
         else:
-            # TODO: Handle these errors more nicely
-            return make_response("Email is not an authorised email!<br>This is a private service.", 405)
+            flash("Email is not an authorised email! This is a private service.")
     return render_template("register.html", form=form)
