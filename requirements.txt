@@ -5,3 +5,4 @@ flask-login
 wtforms
 wtforms[email]
 python-dotenv
+werkzeug
