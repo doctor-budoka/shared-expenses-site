@@ -2,6 +2,7 @@ import datetime as dt
 
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -12,17 +13,16 @@ class AuthorisedEmail(db.Model):
     user = db.relationship("User", uselist=False, back_populates="email")
     is_registered = db.Column(db.Boolean, nullable=False, default=False)
 
-    def add_user(self, user):
+    def register_user(self, user):
         if self.is_registered:
             return False
-
         self.user = user
         self.is_registered = True
         return True
 
 
-class User(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     email_id = db.Column(
         db.Integer,
         db.ForeignKey("authorised_email.email_id"),
@@ -41,11 +41,14 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     @classmethod
-    def register_user(cls, email, password):
+    def create_user(cls, email, password):
         new_user = cls()
         new_user.set_password(password)
         new_user.email = email
-        return email.add_user(new_user)
+        if email.register_user(new_user):
+            return new_user
+        else:
+            return None
 
     def __repr__(self):
         return f"<User {self.username}>"
