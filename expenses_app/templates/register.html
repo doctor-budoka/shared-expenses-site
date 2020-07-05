@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% from "macros.html" import display_form_field %}
+{% block content %}
+<h2>Registration</h2>
+<form method="POST" action="{{ url_for('register') }}">
+    {{ form.hidden_tag() }}
+    {{ display_form_field(form.email) }}
+    {{ display_form_field(form.password) }}
+    {{ display_form_field(form.confirm) }}
+    <div>{{ form.submit }}</div>
+</form>
+{% endblock %}
