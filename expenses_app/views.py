@@ -12,7 +12,17 @@ def index():
 def login():
     form = LogInForm()
     if form.validate_on_submit():
-        return redirect(url_for("index"))
+        email = form.email.data
+        password = form.password.data
+        email = AuthorisedEmail.query.filter(AuthorisedEmail.email == email).first()
+        if email and email.user and email.user.check_password(password):
+            user = email.user
+            if user and user.check_password(password):
+                # TODO: log the user in
+                return redirect(url_for("index"))
+        else:
+            # TODO: Limit number of retries, possibly redirect back to the page again
+            return make_response("Invalid email or password!", 400)
     return render_template("login.html", form=form)
 
 
