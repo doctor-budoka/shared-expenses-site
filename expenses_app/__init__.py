@@ -9,5 +9,8 @@ def create_app():
 
     with app.app_context():
         from expenses_app import views
+        if app.config["RESET_DB"]:
+            db.drop_all()
+
         db.create_all()
     return app
