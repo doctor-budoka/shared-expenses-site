@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 
 {% block content %}
-We'll get the form object created before really start working on this template.
+<h2>Log In</h2>
+<form>
+<div>{{ form.email.label }} {{ form.email }}</div>
+<div>{{ form.password.label }} {{ form.password }}</div>
+    <div>{{ form.submit }}</div>
+</form>
 {% endblock %}
