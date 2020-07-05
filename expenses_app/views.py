@@ -1,9 +1,12 @@
 from flask import current_app as app, render_template, redirect, url_for, make_response, flash
+from flask_login import login_user, login_required
 from expenses_app.forms import LogInForm, Register
 from expenses_app.models import db, AuthorisedEmail, User
+from expenses_app import login_manager
 
 
 @app.route("/")
+@login_required
 def index():
     return render_template("index.html")
 
@@ -17,6 +20,7 @@ def login():
         email = AuthorisedEmail.query.filter(AuthorisedEmail.email == email).first()
         if email and email.user and email.user.check_password(password):
             user = email.user
+            login_user(user)
             # TODO: log the user in
             return redirect(url_for("index"))
         else:
@@ -36,8 +40,10 @@ def register():
             flash("You are already registered! Try logging in instead!")
         elif auth_email:
             password = form.password.data
-            if User.register_user(auth_email, password):
-                db.session.commit()
+            user = User.create_user(auth_email, password)
+            db.session.commit()
+            if user:
+                login_user(user)
                 return redirect(url_for("index"))
             else:
                 # TODO: Handle these errors more nicely
@@ -45,3 +51,16 @@ def register():
         else:
             flash("Email is not an authorised email! This is a private service.")
     return render_template("register.html", form=form)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id is not None:
+        return User.query.get(user_id)
+    return None
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash('You must be logged in to view that page.')
+    return redirect(url_for('login'))
