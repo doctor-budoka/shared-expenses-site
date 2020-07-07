@@ -1,7 +1,15 @@
 {% extends "layout.html" %}
 
 {% block content %}
-This part only really matters once we have a login. Deal with it later.
-
-Go <a href="{{ url_for("login") }}">here</a> to go to the page you're actually working on.
+{% if current_user.groups %}
+Groups:
+<ul>
+    {% for group in current_user.groups %}
+    <li>{{ group.name }}</li>
+    {% endfor %}
+</ul>
+Or create a new group <a href="{{ url_for("index") }}">here</a>.
+{% else %}
+You have no groups. Do you want to create one? Click <a href="{{ url_for("index") }}">here</a>.
+{% endif %}
 {% endblock %}
