@@ -8,4 +8,5 @@
     {{ display_form_field(form.password) }}
     <div>{{ form.submit }}</div>
 </form>
+<div>Don't have an account? Try <a href="{{ url_for("register") }}">registering</a> instead.</div>
 {% endblock %}

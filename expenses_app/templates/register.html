@@ -9,4 +9,5 @@
     {{ display_form_field(form.confirm) }}
     <div>{{ form.submit }}</div>
 </form>
+<div>Already have an account? <a href="{{ url_for("login") }}">Log in</a> instead.</div>
 {% endblock %}
