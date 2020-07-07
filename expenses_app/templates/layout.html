@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
     <title>{{ title }}</title>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -14,8 +17,10 @@
     {% endwith %}
 </head>
 <body>
-    {% block content %}
-    Hmmm... There appears to be an issue
-    {% endblock %}
+    <div class="main">
+        {% block content %}
+        Hmmm... There appears to be an issue
+        {% endblock %}
+    </div>
 </body>
 </html>
