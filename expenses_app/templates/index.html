@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% from "macros.html" import display_form_field %}
 {% block content %}
 {% if current_user.groups %}
 Groups:
@@ -8,8 +8,9 @@ Groups:
     <li>{{ group.name }}</li>
     {% endfor %}
 </ul>
-Or create a new group <a href="{{ url_for("index") }}">here</a>.
 {% else %}
-You have no groups. Do you want to create one? Click <a href="{{ url_for("index") }}">here</a>.
+You have no groups. Do you want to create one?
 {% endif %}
+Create a new group:
+<form method="POST" action="{{ url_for('index') }}">{{ display_form_field(form.name) }}{{ form.create }}</form>
 {% endblock %}

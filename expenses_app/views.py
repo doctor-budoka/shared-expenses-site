@@ -1,14 +1,15 @@
 from flask import current_app as app, render_template, redirect, url_for, make_response, flash
 from flask_login import login_user, login_required, logout_user
-from expenses_app.forms import LogInForm, Register
+from expenses_app.forms import LogInForm, Register, CreateGroup
 from expenses_app.models import db, AuthorisedEmail, User
 from expenses_app import login_manager
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    return render_template("index.html")
+    form = CreateGroup()
+    return render_template("index.html", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
