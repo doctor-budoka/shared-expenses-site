@@ -21,3 +21,8 @@ class Register(FlaskForm):
         EqualTo("password", message="Password and confirmation must be the same!")
     ])
     submit = SubmitField("Submit")
+
+
+class NewGroup(FlaskForm):
+    name = StringField("Name", [InputRequired(message="You must provide a name for the group!")])
+    submit = SubmitField("Create")
