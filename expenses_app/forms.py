@@ -23,6 +23,6 @@ class Register(FlaskForm):
     submit = SubmitField("Submit")
 
 
-class NewGroup(FlaskForm):
+class CreateGroup(FlaskForm):
     name = StringField("Name", [InputRequired(message="You must provide a name for the group!")])
-    submit = SubmitField("Create")
+    create = SubmitField("Create")
