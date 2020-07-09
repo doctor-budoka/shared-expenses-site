@@ -12,5 +12,7 @@ Groups:
 You have no groups. Do you want to create one?
 {% endif %}
 Create a new group:
-<form method="POST" action="{{ url_for('index') }}">{{ display_form_field(form.name) }}{{ form.create }}</form>
+<form method="POST" action="{{ url_for('index') }}">
+    {{ form.hidden_tag() }}{{ display_form_field(form.name) }}{{ form.create }}
+</form>
 {% endblock %}
