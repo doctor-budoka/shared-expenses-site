@@ -1,7 +1,7 @@
 from flask import current_app as app, render_template, redirect, url_for, make_response, flash
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from expenses_app.forms import LogInForm, Register, CreateGroup
-from expenses_app.models import db, AuthorisedEmail, User
+from expenses_app.models import db, AuthorisedEmail, User, Group
 from expenses_app import login_manager
 
 
@@ -9,6 +9,14 @@ from expenses_app import login_manager
 @login_required
 def index():
     form = CreateGroup()
+    if form.validate_on_submit():
+        new_group_name = form.name.data
+        exists = Group.query.filter(Group.name == new_group_name).first()
+        if not exists:
+            current_user.create_group(new_group_name)
+            db.session.commit()
+        else:
+            flash(f"{new_group_name} has already been taken! Try another name.")
     return render_template("index.html", form=form)
 
 
