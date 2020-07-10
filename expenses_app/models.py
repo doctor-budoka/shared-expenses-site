@@ -80,5 +80,8 @@ class Group(db.Model):
 
     members = db.relationship("User", secondary=group_membership_table, back_populates="groups")
 
+    def has_user(self, user):
+        return user in self.members
+
     def __repr__(self):
         return f"<Group {self.id}, {self.name}>"
