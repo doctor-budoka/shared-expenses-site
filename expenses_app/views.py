@@ -19,6 +19,14 @@ def index():
             flash(f"{new_group_name} has already been taken! Try another name.")
     return render_template("index.html", form=form)
 
+@app.route("/groups/<group_name>", methods=["GET", "POST"])
+@login_required
+def groups(group_name):
+    group = Group.query.filter(Group.name == group_name).first()
+    if not group:
+        redirect("index")
+    return render_template("group_summary.html", group=group)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
