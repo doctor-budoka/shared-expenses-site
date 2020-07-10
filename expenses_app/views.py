@@ -24,9 +24,11 @@ def index():
 @login_required
 def group_summary(group_name):
     group = Group.query.filter(Group.name == group_name).first()
-    if not group:
-        redirect("index")
-    return render_template("group_summary.html", group=group)
+
+    if group and group.has_user(current_user):
+        return render_template("group_summary.html", group=group)
+
+    return redirect(url_for("index"))
 
 
 @app.route("/login", methods=["GET", "POST"])
