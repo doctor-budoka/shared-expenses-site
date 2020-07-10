@@ -5,7 +5,7 @@
 Groups:
 <ul>
     {% for group in current_user.groups %}
-    <li>{{ group.name }}</li>
+    <li><a href="{{ url_for("group_summary", group_name=group.name) }}">{{ group.name }}</a></li>
     {% endfor %}
 </ul>
 {% else %}
