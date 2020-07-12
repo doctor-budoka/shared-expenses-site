@@ -15,6 +15,9 @@ class Register(FlaskForm):
     email = StringField("Email", [
         InputRequired(message="You must provide an email address to continue"),
         Email(message="Email entered is not a valid email address")])
+    username = StringField(
+        "Username", [InputRequired(message="You must profice a username to continue")]
+    )
     password = PasswordField("Password", [InputRequired(message="You must provide a password to continue")])
     confirm = PasswordField("Confirm", [
         InputRequired(message="You must provide a password to continue"),
