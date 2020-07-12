@@ -55,12 +55,17 @@ def register():
     form = Register()
     if form.validate_on_submit():
         email = form.email.data
+        username = form.username.data
+
+        username_exists = User.query.filter_by(username=username).first()
         auth_email = AuthorisedEmail.query.filter_by(email=email).first()
         if auth_email and auth_email.is_registered:
             flash("You are already registered! Try logging in instead!")
+        elif auth_email and username_exists:
+            flash("That username already exists! Try another")
         elif auth_email:
             password = form.password.data
-            user = User.create_user(auth_email, password)
+            user = User.create_user(auth_email, password, username)
             db.session.commit()
             if user:
                 login_user(user)
