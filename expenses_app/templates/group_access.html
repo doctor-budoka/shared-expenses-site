@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>{{ group.name }} Access</h2>
+<h3>Current users</h3>
+<ul>
+{% for user in group.users %}
+<li>{{ user.username }}</li>
+{% endfor %}
+</ul>
+<h3>Remove users</h3>
+
+<h3>Add users</h3>
+
+{% endblock %}

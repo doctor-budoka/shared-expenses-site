@@ -23,12 +23,26 @@ def index():
 @app.route("/groups/<group_name>/summary", methods=["GET", "POST"])
 @login_required
 def group_summary(group_name):
-    group = Group.query.filter(Group.name == group_name).first()
+    group = group_from_group_name(group_name)
 
     if group and group.has_user(current_user):
         return render_template("group_summary.html", group=group)
 
     return redirect(url_for("index"))
+
+
+@app.route("/groups/<group_name>/access", methods=["GET", "POST"])
+@login_required
+def group_access(group_name):
+    group = group_from_group_name(group_name)
+    if group and group.has_user(current_user):
+        return render_template("group_access.html", group=group)
+
+    return render_template("index.html", group=group)
+
+
+def group_from_group_name(group_name):
+    return Group.query.filter(Group.name == group_name).first()
 
 
 @app.route("/login", methods=["GET", "POST"])
