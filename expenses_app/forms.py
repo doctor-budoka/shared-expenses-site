@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import InputRequired, Email, EqualTo
 
 
@@ -29,3 +29,14 @@ class Register(FlaskForm):
 class CreateGroup(FlaskForm):
     name = StringField("Name", [InputRequired(message="You must provide a name for the group!")])
     create = SubmitField("Create")
+
+
+class AddUserToGroup(FlaskForm):
+    username = StringField("Username", [InputRequired(message="You must provide a name for the group!")])
+    add = SubmitField("Add")
+
+
+class RemoveUserFromGroup(FlaskForm):
+    username = SelectField(
+        "Username", coerce=int, validators=[InputRequired(message="You must provide a name for the group!")])
+    remove = SubmitField("Remove")
