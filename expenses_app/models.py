@@ -41,6 +41,7 @@ class User(UserMixin, db.Model):
         nullable=False
     )
     email = db.relationship("AuthorisedEmail", back_populates="user")
+    username = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     time_joined = db.Column(db.DateTime, default=dt.datetime.utcnow)
     owned_groups = db.relationship("Group", back_populates="owner")
@@ -53,10 +54,11 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     @classmethod
-    def create_user(cls, email, password):
+    def create_user(cls, email, password, username):
         new_user = cls()
         new_user.set_password(password)
         new_user.email = email
+        new_user.username = username
         if email.register_user(new_user):
             return new_user
         else:
