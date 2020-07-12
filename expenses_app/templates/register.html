@@ -5,6 +5,7 @@
 <form method="POST" action="{{ url_for('register') }}">
     {{ form.hidden_tag() }}
     {{ display_form_field(form.email) }}
+    {{ display_form_field(form.username) }}
     {{ display_form_field(form.password) }}
     {{ display_form_field(form.confirm) }}
     <div>{{ form.submit }}</div>
