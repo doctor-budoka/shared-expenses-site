@@ -1,6 +1,6 @@
 from flask import current_app as app, render_template, redirect, url_for, make_response, flash
 from flask_login import login_user, login_required, logout_user, current_user
-from expenses_app.forms import LogInForm, Register, CreateGroup
+from expenses_app.forms import LogInForm, Register, CreateGroup, AddUserToGroup, RemoveUserFromGroup
 from expenses_app.models import db, AuthorisedEmail, User, Group
 from expenses_app import login_manager
 
@@ -36,7 +36,10 @@ def group_summary(group_name):
 def group_access(group_name):
     group = group_from_group_name(group_name)
     if group and group.has_user(current_user):
-        return render_template("group_access.html", group=group)
+        add_form = AddUserToGroup()
+        remove_form = RemoveUserFromGroup()
+        remove_form.choices = [(member.id, member.username) for member in group.members if member != current_user]
+        return render_template("group_access.html", group=group, add_form=add_form, remove_form=remove_form)
 
     return render_template("index.html", group=group)
 
