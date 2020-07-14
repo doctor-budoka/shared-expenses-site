@@ -86,5 +86,11 @@ class Group(db.Model):
     def has_user(self, user):
         return user in self.members
 
+    def add_user(self, new_user):
+        self.members.append(new_user)
+
+    def remove_user(self, old_user):
+        self.members.remove(old_user)
+
     def __repr__(self):
         return f"<Group {self.id}, {self.name}>"
