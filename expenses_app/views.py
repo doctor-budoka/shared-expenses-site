@@ -38,6 +38,13 @@ def group_access(group_name):
     if group and group.has_user(current_user):
         add_form = AddUserToGroup()
         remove_form = RemoveUserFromGroup()
+        if add_form.validate_on_submit():
+            user_name = add_form.username.data
+            new_user = User.query.filter_by(username=user_name).first()
+            if new_user:
+                group.add_user(new_user)
+                db.session.commit()
+
         remove_form.choices = [(member.id, member.username) for member in group.members if member != current_user]
         return render_template("group_access.html", group=group, add_form=add_form, remove_form=remove_form)
 
