@@ -1,15 +1,17 @@
 {% extends "layout.html" %}
-
+{% from "macros.html" import display_form_field %}
 {% block content %}
 <h2>{{ group.name }} Access</h2>
 <h3>Current users</h3>
 <ul>
-{% for user in group.users %}
+{% for user in group.members %}
 <li>{{ user.username }}</li>
 {% endfor %}
 </ul>
 <h3>Remove users</h3>
 
 <h3>Add users</h3>
-
+<form method="POST" action="{{ url_for('group_access', group_name=group.name) }}">
+    {{ add_form.hidden_tag() }}{{ display_form_field(add_form.username) }}{{ add_form.add }}
+</form>
 {% endblock %}
