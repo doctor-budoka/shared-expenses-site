@@ -68,6 +68,7 @@ class User(UserMixin, db.Model):
         new_group = Group()
         new_group.name = name
         new_group.owner = self
+        new_group.members.append(self)
         self.groups.append(new_group)
 
     def __repr__(self):
