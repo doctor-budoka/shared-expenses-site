@@ -38,17 +38,41 @@ def group_access(group_name):
     if group and group.has_user(current_user):
         add_form = AddUserToGroup()
         remove_form = RemoveUserFromGroup()
-        if add_form.validate_on_submit():
-            user_name = add_form.username.data
-            new_user = User.query.filter_by(username=user_name).first()
-            if new_user:
-                group.add_user(new_user)
-                db.session.commit()
 
-        remove_form.choices = [(member.id, member.username) for member in group.members if member != current_user]
+        remove_form.username_to_remove.choices = [
+            (member.id, member.username) for member in group.members if member != current_user]
         return render_template("group_access.html", group=group, add_form=add_form, remove_form=remove_form)
 
     return render_template("index.html", group=group)
+
+
+@app.route("/groups/<group_name>/remove_user", methods=["POST"])
+@login_required
+def remove_user_from_group(group_name):
+    group = group_from_group_name(group_name)
+    remove_form = RemoveUserFromGroup()
+    if remove_form.validate_on_submit():
+        user_name = remove_form.username_to_remove.data
+        old_user = User.query.filter_by(username=user_name).first()
+        group.remove_user(old_user)
+        db.session.commit()
+    return render_template(url_for("group_access", group_name=group_name))
+
+
+@app.route("/groups/<group_name>/add_user", methods=["POST"])
+@login_required
+def add_user_to_group(group_name):
+    group = group_from_group_name(group_name)
+    add_form = AddUserToGroup()
+    if add_form.validate_on_submit():
+        user_name = add_form.username_to_add.data
+        new_user = User.query.filter_by(username=user_name).first()
+        if new_user:
+            group.add_user(new_user)
+            db.session.commit()
+        else:
+            flash(f"{user_name} is not a valid username!")
+    return render_template(url_for("group_access", group_name=group_name))
 
 
 def group_from_group_name(group_name):
