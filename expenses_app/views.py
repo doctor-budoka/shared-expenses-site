@@ -39,7 +39,7 @@ def group_access(group_name):
         add_form = AddUserToGroup()
         remove_form = RemoveUserFromGroup()
 
-        remove_form.username_to_remove.choices = [
+        remove_form.username.choices = [
             (member.id, member.username) for member in group.members if member != current_user]
         return render_template("group_access.html", group=group, add_form=add_form, remove_form=remove_form)
 
@@ -51,10 +51,10 @@ def group_access(group_name):
 def remove_user_from_group(group_name):
     group = group_from_group_name(group_name)
     remove_form = RemoveUserFromGroup()
-    remove_form.username_to_remove.choices = [
+    remove_form.username.choices = [
         (member.id, member.username) for member in group.members if member != current_user]
     if remove_form.validate_on_submit():
-        user_id = remove_form.username_to_remove.data
+        user_id = remove_form.username.data
         old_user = User.query.get(user_id)
         group.remove_user(old_user)
         db.session.commit()
@@ -67,7 +67,7 @@ def add_user_to_group(group_name):
     group = group_from_group_name(group_name)
     add_form = AddUserToGroup()
     if add_form.validate_on_submit():
-        user_name = add_form.username_to_add.data
+        user_name = add_form.username.data
         new_user = User.query.filter_by(username=user_name).first()
         if new_user:
             group.add_user(new_user)

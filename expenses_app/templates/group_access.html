@@ -10,11 +10,11 @@
 </ul>
 <h3>Remove users</h3>
 <form method="POST" action="{{ url_for('remove_user_from_group', group_name=group.name) }}">
-    {{ remove_form.hidden_tag() }}{{ display_form_field(remove_form.username_to_remove) }}{{ remove_form.remove }}
+    {{ remove_form.hidden_tag() }}{{ display_form_field(remove_form.username) }}{{ remove_form.remove }}
 </form>
 
 <h3>Add users</h3>
 <form method="POST" action="{{ url_for('add_user_to_group', group_name=group.name) }}">
-    {{ add_form.hidden_tag() }}{{ display_form_field(add_form.username_to_add) }}{{ add_form.add }}
+    {{ add_form.hidden_tag() }}{{ display_form_field(add_form.username) }}{{ add_form.add }}
 </form>
 {% endblock %}
