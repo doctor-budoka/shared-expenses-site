@@ -9,6 +9,9 @@
 {% endfor %}
 </ul>
 <h3>Remove users</h3>
+<form method="POST" action="{{ url_for('group_access', group_name=group.name) }}">
+    {{ remove_form.hidden_tag() }}{{ display_form_field(remove_form.username) }}{{ remove_form.remove }}
+</form>
 
 <h3>Add users</h3>
 <form method="POST" action="{{ url_for('group_access', group_name=group.name) }}">
