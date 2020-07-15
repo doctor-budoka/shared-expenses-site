@@ -89,7 +89,6 @@ def login():
         if email and email.user and email.user.check_password(password):
             user = email.user
             login_user(user)
-            # TODO: log the user in
             return redirect(url_for("index"))
         else:
             # TODO: Limit number of retries
