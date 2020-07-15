@@ -32,11 +32,11 @@ class CreateGroup(FlaskForm):
 
 
 class AddUserToGroup(FlaskForm):
-    username = StringField("Username", [InputRequired(message="You must provide a name for the group!")])
+    username_to_add = StringField("Username", [InputRequired(message="You must provide a name for the group!")])
     add = SubmitField("Add")
 
 
 class RemoveUserFromGroup(FlaskForm):
-    username = SelectField(
+    username_to_remove = SelectField(
         "Username", coerce=int, validators=[InputRequired(message="You must provide a name for the group!")])
     remove = SubmitField("Remove")
