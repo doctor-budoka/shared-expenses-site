@@ -94,3 +94,12 @@ class Group(db.Model):
 
     def __repr__(self):
         return f"<Group {self.id}, {self.name}>"
+
+
+class Accounts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), index=True, nullable=False)
+    group_id = db.Column(db.Integer, db.ForeignKey("group.id"), index=True, nullable=False)
+    group = db.relationship("Group", back_populates="accounts")
+
+    db.UniqueConstraint("name", "group_id", name="uix_group_name")
