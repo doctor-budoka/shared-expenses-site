@@ -82,6 +82,7 @@ class Group(db.Model):
     owner = db.relationship("User", back_populates="owned_groups")
 
     members = db.relationship("User", secondary=group_membership_table, back_populates="groups")
+    accounts = db.relationship("Account", back_populates="group")
 
     def has_user(self, user):
         return user in self.members
@@ -96,10 +97,15 @@ class Group(db.Model):
         return f"<Group {self.id}, {self.name}>"
 
 
-class Accounts(db.Model):
+class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), index=True, nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey("group.id"), index=True, nullable=False)
-    group = db.relationship("Group", back_populates="accounts")
+    group = db.relationship("Group", uselist=False, back_populates="accounts")
+    is_avatar = db.Column(db.Boolean, nullable=False, default=False)
+    avatar_for_user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    avatar_for = db.relationship("User", uselist=False)
+    has_balance = db.Column(db.Boolean, default=False, nullable=False)
+    starting_balance = db.Column(db.Numeric, nullable=True)
 
     db.UniqueConstraint("name", "group_id", name="uix_group_name")
