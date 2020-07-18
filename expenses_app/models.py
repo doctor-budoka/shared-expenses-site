@@ -107,5 +107,6 @@ class Account(db.Model):
     avatar_for = db.relationship("User", uselist=False)
     has_balance = db.Column(db.Boolean, default=False, nullable=False)
     starting_balance = db.Column(db.Numeric, nullable=True)
+    status = db.Column(db.Enum("live", "removed", name="account_status"), nullable=False, default="live")
 
     db.UniqueConstraint("name", "group_id", name="uix_group_name")
