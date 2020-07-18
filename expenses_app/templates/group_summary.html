@@ -3,6 +3,6 @@
 {% block content %}
 <h2>{{ group.name }} Summary</h2>
 <div><a href="{{ url_for('group_access', group_name=group.name) }}">Add/remove users here</a></div>
-
+<div><a href="{{ url_for('group_accounts', group_name=group.name) }}">Add/remove accounts here</a></div>
 <h3></h3>
 {% endblock %}
