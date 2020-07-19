@@ -1,6 +1,6 @@
 from flask import current_app as app, render_template, redirect, url_for, make_response, flash
 from flask_login import login_user, login_required, logout_user, current_user
-from expenses_app.forms import LogInForm, Register, CreateGroup, AddUserToGroup, RemoveUserFromGroup
+from expenses_app.forms import LogInForm, Register, CreateGroup, AddUserToGroup, RemoveUserFromGroup, AddAccountToGroup, RemoveAccountFromGroup
 from expenses_app.models import db, AuthorisedEmail, User, Group
 from expenses_app import login_manager
 
@@ -75,6 +75,16 @@ def add_user_to_group(group_name):
         else:
             flash(f"{user_name} is not a valid username!")
     return redirect(url_for("group_access", group_name=group_name))
+
+
+@app.route("/groups/<group_name>/accounts")
+@login_required
+def group_accounts(group_name):
+    group = group_from_group_name(group_name)
+    add_form = AddAccountToGroup()
+    remove_form = RemoveAccountFromGroup()
+
+    return render_template("group_accounts.html", group=group, add_form=add_form, remove_form=remove_form)
 
 
 def group_from_group_name(group_name):
