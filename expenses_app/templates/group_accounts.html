@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% from "macros.html" import display_form_field %}
+{% block content %}
+<h2>{{ group.name }} Accounts</h2>
+<h3>Current accounts</h3>
+<ul>
+{% for user in group.accounts %}
+<li>{{ user.username }}</li>
+{% endfor %}
+</ul>
+<h3>Remove accounts</h3>
+<form method="POST" action="{{ url_for('remove_user_from_group', group_name=group.name) }}">
+    {{ remove_form.hidden_tag() }}
+    {{ display_form_field(remove_form.name) }}
+    {{ remove_form.remove }}
+</form>
+
+<h3>Add accounts</h3>
+<form method="POST" action="{{ url_for('add_user_to_group', group_name=group.name) }}">
+    {{ add_form.hidden_tag() }}
+    {{ display_form_field(add_form.name) }}
+    {{ display_form_field(add_form.user) }}
+    {{ display_form_field(add_form.starting_balance) }}
+    {{ display_form_field(add_form.has_balance) }}
+    {{ add_form.add }}
+</form>
+{% endblock %}
