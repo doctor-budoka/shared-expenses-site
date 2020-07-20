@@ -84,6 +84,14 @@ def group_accounts(group_name):
     add_form = AddAccountToGroup()
     remove_form = RemoveAccountFromGroup()
 
+    users_with_avatars = set(account.avatar_for for account in group.accounts if account.is_avatar)
+    add_form.user.choices = [
+        (user.id, user.username) for user in group.members if user not in users_with_avatars
+    ]
+    add_form.user.choices.append((-1, "None"))
+    remove_form.name.choices = [
+        (account.id, account.name) for account in group.accounts
+    ]
     return render_template("group_accounts.html", group=group, add_form=add_form, remove_form=remove_form)
 
 
