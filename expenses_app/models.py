@@ -110,3 +110,13 @@ class Account(db.Model):
     status = db.Column(db.Enum("live", "removed", name="account_status"), nullable=False, default="live")
 
     db.UniqueConstraint("name", "group_id", name="uix_group_name")
+
+
+class Transactions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey("group.id"), nullable=False)
+    paid_by_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=False)
+    on_behalf_of_id = db.Column(db.Integer, db.ForeignKey("account.id"), nullable=False)
+    description = db.Column(db.Text(200), nullable=True)
+    store = db.Column(db.Text(100), nullable=True)
+    amount = db.Column(db.Float, nullable=False)
