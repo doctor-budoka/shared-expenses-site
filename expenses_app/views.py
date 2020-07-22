@@ -81,18 +81,36 @@ def add_user_to_group(group_name):
 @login_required
 def group_accounts(group_name):
     group = group_from_group_name(group_name)
-    add_form = AddAccountToGroup()
-    remove_form = RemoveAccountFromGroup()
 
-    users_with_avatars = set(account.avatar_for for account in group.accounts if account.is_avatar)
-    add_form.user.choices = [
-        (user.id, user.username) for user in group.members if user not in users_with_avatars
-    ]
-    add_form.user.choices.append((-1, "None"))
-    remove_form.name.choices = [
-        (account.id, account.name) for account in group.accounts
-    ]
-    return render_template("group_accounts.html", group=group, add_form=add_form, remove_form=remove_form)
+    if group and group.has_user(current_user):
+        add_form = AddAccountToGroup()
+        remove_form = RemoveAccountFromGroup()
+
+        users_with_avatars = set(account.avatar_for for account in group.accounts if account.is_avatar)
+        add_form.user.choices = [
+            (user.id, user.username) for user in group.members if user not in users_with_avatars
+        ]
+        add_form.user.choices.append((-1, "None"))
+        remove_form.name.choices = [
+            (account.id, account.name) for account in group.accounts
+        ]
+        return render_template("group_accounts.html", group=group, add_form=add_form, remove_form=remove_form)
+
+    return redirect(url_for(index))
+
+
+@app.route("/groups/<group_name>/add_account", method=["POST"])
+@login_required
+def add_account_to_group(group_name):
+    group = group_from_group_name(group_name)
+    add_form = AddAccountToGroup()
+    if add_form.validate_on_submit():
+        name = add_form.name.data
+        user = add_form.user.data
+        has_balance = add_form.has_balance.data
+        balance = add_form.balance.data
+
+    return redirect(url_for("group_access", group_name=group_name))
 
 
 def group_from_group_name(group_name):
