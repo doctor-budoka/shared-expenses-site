@@ -99,7 +99,7 @@ def group_accounts(group_name):
     return redirect(url_for(index))
 
 
-@app.route("/groups/<group_name>/add_account", method=["POST"])
+@app.route("/groups/<group_name>/add_account", methods=["POST"])
 @login_required
 def add_account_to_group(group_name):
     group = group_from_group_name(group_name)
