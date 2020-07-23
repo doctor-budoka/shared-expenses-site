@@ -111,6 +111,17 @@ class Account(db.Model):
 
     db.UniqueConstraint("name", "group_id", name="uix_group_name")
 
+    @classmethod
+    def create_account(cls, group, name, user, balance):
+        new_account = cls()
+        new_account.group = group
+        new_account.name = name
+        new_account.is_live = user is not None
+        new_account.user = user
+        new_account.starting_balance = balance
+        new_account.has_balance = balance is not None
+        return new_account
+
 
 class Transactions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
