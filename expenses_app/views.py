@@ -1,7 +1,7 @@
 from flask import current_app as app, render_template, redirect, url_for, make_response, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from expenses_app.forms import LogInForm, Register, CreateGroup, AddUserToGroup, RemoveUserFromGroup, AddAccountToGroup, RemoveAccountFromGroup
-from expenses_app.models import db, AuthorisedEmail, User, Group
+from expenses_app.models import db, AuthorisedEmail, User, Group, Account
 from expenses_app import login_manager
 
 
@@ -106,11 +106,18 @@ def add_account_to_group(group_name):
     add_form = AddAccountToGroup()
     if add_form.validate_on_submit():
         name = add_form.name.data
-        user = add_form.user.data
-        has_balance = add_form.has_balance.data
-        balance = add_form.balance.data
+        name_exists = Account.query.filter(Account.name == name, Account.group_id == group.id).first()
+        if name_exists:
+            flash("The account name already exists in this group!")
+        else:
+            user_id = add_form.user.data
+            user = User.query.get(user_id) if user_id > -1 else None
+            has_balance = add_form.has_balance.data
+            balance = add_form.balance.data if has_balance else None
+            Account.create_account(group, name, user, balance)
+            db.session.commit()
 
-    return redirect(url_for("group_access", group_name=group_name))
+    return redirect(url_for("group_accounts", group_name=group_name))
 
 
 def group_from_group_name(group_name):
