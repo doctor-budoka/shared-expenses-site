@@ -22,5 +22,10 @@
         Hmmm... There appears to be an issue
         {% endblock %}
     </div>
+    {% if current_user.is_authenticated %}
+    <div class="footer">
+        <a href="{{ url_for("auth_bp.logout") }}">Logout</a>
+    </div>
+    {% endif %}
 </body>
 </html>
