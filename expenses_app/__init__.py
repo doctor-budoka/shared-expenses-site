@@ -18,8 +18,7 @@ def create_app():
         from expenses_app.group import group
         app.register_blueprint(group.grp_bp)
 
-        if app.config["RESET_DB"]:
-            db.drop_all()
+        from expenses_app import commands
 
         db.create_all()
     return app
