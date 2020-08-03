@@ -11,14 +11,14 @@
 {% endfor %}
 </ul>
 <h3>Remove accounts</h3>
-<form method="POST" action="{{ url_for('remove_account_from_group', group_name=group.name) }}">
+<form method="POST" action="{{ url_for('grp_bp.remove_account_from_group', group_name=group.name) }}">
     {{ remove_form.hidden_tag() }}
     {{ display_form_field(remove_form.name) }}
     {{ remove_form.remove }}
 </form>
 
 <h3>Add accounts</h3>
-<form method="POST" action="{{ url_for('add_account_to_group', group_name=group.name) }}">
+<form method="POST" action="{{ url_for('grp_bp.add_account_to_group', group_name=group.name) }}">
     {{ add_form.hidden_tag() }}
     {{ display_form_field(add_form.name) }}
     {{ display_form_field(add_form.user) }}

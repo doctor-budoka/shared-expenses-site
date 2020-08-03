@@ -15,7 +15,9 @@ def create_app():
         from expenses_app.auth import auth
         app.register_blueprint(auth.auth_bp)
 
-        from expenses_app import views
+        from expenses_app.group import group
+        app.register_blueprint(group.grp_bp)
+
         if app.config["RESET_DB"]:
             db.drop_all()
 

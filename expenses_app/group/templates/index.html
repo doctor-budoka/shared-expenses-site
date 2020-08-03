@@ -5,14 +5,14 @@
 Groups:
 <ul>
     {% for group in current_user.groups %}
-    <li><a href="{{ url_for("group_summary", group_name=group.name) }}">{{ group.name }}</a></li>
+    <li><a href="{{ url_for("grp_bp.group_summary", group_name=group.name) }}">{{ group.name }}</a></li>
     {% endfor %}
 </ul>
 {% else %}
 You have no groups. Do you want to create one?
 {% endif %}
 Create a new group:
-<form method="POST" action="{{ url_for('index') }}">
+<form method="POST" action="{{ url_for('grp_bp.index') }}">
     {{ form.hidden_tag() }}{{ display_form_field(form.name) }}{{ form.create }}
 </form>
 {% endblock %}

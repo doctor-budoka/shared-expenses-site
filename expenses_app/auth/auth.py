@@ -25,7 +25,7 @@ def login():
         if email and email.user and email.user.check_password(password):
             user = email.user
             login_user(user)
-            return redirect(url_for("index"))
+            return redirect(url_for("grp_bp.index"))
         else:
             # TODO: Limit number of retries
             flash("Invalid email or password!")
@@ -52,7 +52,7 @@ def register():
             db.session.commit()
             if user:
                 login_user(user)
-                return redirect(url_for("index"))
+                return redirect(url_for("grp_bp.index"))
             else:
                 # TODO: Handle these errors more nicely
                 return make_response("Something went wrong with registration!", 500)

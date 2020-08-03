@@ -1,10 +1,16 @@
-from flask import current_app as app, render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import login_required, current_user
 from expenses_app.forms import CreateGroup, AddUserToGroup, RemoveUserFromGroup, AddAccountToGroup, RemoveAccountFromGroup
 from expenses_app.models import db, User, Group, Account
 
+grp_bp = Blueprint(
+    'grp_bp', __name__,
+    template_folder='templates',
+    static_folder='static'
+)
 
-@app.route("/", methods=["GET", "POST"])
+
+@grp_bp.route("/", methods=["GET", "POST"])
 @login_required
 def index():
     form = CreateGroup()
@@ -19,7 +25,7 @@ def index():
     return render_template("index.html", form=form)
 
 
-@app.route("/groups/<group_name>/summary", methods=["GET", "POST"])
+@grp_bp.route("/groups/<group_name>/summary", methods=["GET", "POST"])
 @login_required
 def group_summary(group_name):
     group = group_from_group_name(group_name)
@@ -27,10 +33,10 @@ def group_summary(group_name):
     if group and group.has_user(current_user):
         return render_template("group_summary.html", group=group)
 
-    return redirect(url_for("index"))
+    return redirect(url_for("grp_bp.index"))
 
 
-@app.route("/groups/<group_name>/access", methods=["GET", "POST"])
+@grp_bp.route("/groups/<group_name>/access", methods=["GET", "POST"])
 @login_required
 def group_access(group_name):
     group = group_from_group_name(group_name)
@@ -43,7 +49,7 @@ def group_access(group_name):
     return render_template("index.html", group=group)
 
 
-@app.route("/groups/<group_name>/remove_user", methods=["POST"])
+@grp_bp.route("/groups/<group_name>/remove_user", methods=["POST"])
 @login_required
 def remove_user_from_group(group_name):
     group = group_from_group_name(group_name)
@@ -53,10 +59,10 @@ def remove_user_from_group(group_name):
         old_user = User.query.get(user_id)
         group.remove_user(old_user)
         db.session.commit()
-    return redirect(url_for("group_access", group_name=group_name))
+    return redirect(url_for("grp_bp.group_access", group_name=group_name))
 
 
-@app.route("/groups/<group_name>/add_user", methods=["POST"])
+@grp_bp.route("/groups/<group_name>/add_user", methods=["POST"])
 @login_required
 def add_user_to_group(group_name):
     group = group_from_group_name(group_name)
@@ -69,10 +75,10 @@ def add_user_to_group(group_name):
             db.session.commit()
         else:
             flash(f"{user_name} is not a valid username!")
-    return redirect(url_for("group_access", group_name=group_name))
+    return redirect(url_for("grp_bp.group_access", group_name=group_name))
 
 
-@app.route("/groups/<group_name>/accounts")
+@grp_bp.route("/groups/<group_name>/accounts")
 @login_required
 def group_accounts(group_name):
     group = group_from_group_name(group_name)
@@ -82,10 +88,10 @@ def group_accounts(group_name):
         remove_form = RemoveAccountFromGroup.from_group(group)
         return render_template("group_accounts.html", group=group, add_form=add_form, remove_form=remove_form)
 
-    return redirect(url_for(index))
+    return redirect(url_for("grp_bp.index"))
 
 
-@app.route("/groups/<group_name>/add_account", methods=["POST"])
+@grp_bp.route("/groups/<group_name>/add_account", methods=["POST"])
 @login_required
 def add_account_to_group(group_name):
     group = group_from_group_name(group_name)
@@ -103,10 +109,10 @@ def add_account_to_group(group_name):
             Account.create_account(group, name, user, balance)
             db.session.commit()
 
-    return redirect(url_for("group_accounts", group_name=group_name))
+    return redirect(url_for("grp_bp.group_accounts", group_name=group_name))
 
 
-@app.route("/groups/<group_name>/remove_account", methods=["POST"])
+@grp_bp.route("/groups/<group_name>/remove_account", methods=["POST"])
 @login_required
 def remove_account_from_group(group_name):
     group = group_from_group_name(group_name)
@@ -118,7 +124,7 @@ def remove_account_from_group(group_name):
         old_account.status = "removed"
         db.session.commit()
 
-    return redirect(url_for("group_accounts", group_name=group_name))
+    return redirect(url_for("grp_bp.group_accounts", group_name=group_name))
 
 
 def group_from_group_name(group_name):
