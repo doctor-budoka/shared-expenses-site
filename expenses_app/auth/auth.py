@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user
 from werkzeug.utils import redirect
 
 from expenses_app import db, login_manager
-from expenses_app.forms import LogInForm, Register
+from expenses_app.auth.forms import LogInForm, Register
 from expenses_app.models import AuthorisedEmail, User
 
 

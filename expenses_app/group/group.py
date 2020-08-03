@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import login_required, current_user
-from expenses_app.forms import CreateGroup, AddUserToGroup, RemoveUserFromGroup, AddAccountToGroup, RemoveAccountFromGroup
+from expenses_app.group.forms import CreateGroup, AddUserToGroup, RemoveUserFromGroup, AddAccountToGroup, RemoveAccountFromGroup
 from expenses_app.models import db, User, Group, Account
 
 grp_bp = Blueprint(
