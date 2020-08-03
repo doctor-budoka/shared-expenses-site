@@ -107,13 +107,13 @@ def add_account_to_group(group_name):
     return redirect(url_for("group_accounts", group_name=group_name))
 
 
-@app.route("/groups/<group_name>/add_account", methods=["POST"])
+@app.route("/groups/<group_name>/remove_account", methods=["POST"])
 @login_required
 def remove_account_from_group(group_name):
     group = group_from_group_name(group_name)
     remove_form = RemoveAccountFromGroup.from_group(group)
     if remove_form.validate_on_submit():
-        account_id = remove_form.username.data
+        account_id = remove_form.name.data
         old_account = Account.query.get(account_id)
         group.remove_account(old_account)
         old_account.status = "removed"
