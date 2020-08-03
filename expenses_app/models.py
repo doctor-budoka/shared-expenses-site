@@ -109,10 +109,23 @@ class Account(db.Model):
     avatar_for_user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     avatar_for = db.relationship("User", uselist=False)
     has_balance = db.Column(db.Boolean, default=False, nullable=False)
-    starting_balance = db.Column(db.Numeric, nullable=True)
+    starting_balance_cents = db.Column(db.Integer, nullable=True)
     status = db.Column(db.Enum("live", "removed", name="account_status"), nullable=False, default="live")
 
     db.UniqueConstraint("name", "group_id", name="uix_group_name")
+
+    @property
+    def starting_balance(self):
+        return round(self.starting_balance_cents / 100, 2) if self.starting_balance is not None else None
+
+    @starting_balance.setter
+    def starting_balance(self, new_balance):
+        if new_balance is not None:
+            self.has_balance = True
+            self.starting_balance_cents = round(new_balance * 100)
+        else:
+            self.has_balance = False
+            self.starting_balance_cents = None
 
     @classmethod
     def create_account(cls, group, name, user, balance):
@@ -122,7 +135,6 @@ class Account(db.Model):
         new_account.is_avatar = user is not None
         new_account.avatar_for = user
         new_account.starting_balance = balance
-        new_account.has_balance = balance is not None
         return new_account
 
 
