@@ -4,12 +4,12 @@
 <h2>{{ group.name }} Accounts</h2>
 <h3>Current accounts</h3>
 <ul>
-{% for user in group.accounts %}
-<li>{{ user.username }}</li>
+{% for account in group.accounts %}
+<li>{{ account.name }}{% if account.is_avatar %} ({{ account.avatar_for.username }}){% endif %}</li>
 {% endfor %}
 </ul>
 <h3>Remove accounts</h3>
-<form method="POST" action="{{ url_for('remove_user_from_group', group_name=group.name) }}">
+<form method="POST" action="{{ url_for('remove_account_from_group', group_name=group.name) }}">
     {{ remove_form.hidden_tag() }}
     {{ display_form_field(remove_form.name) }}
     {{ remove_form.remove }}

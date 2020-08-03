@@ -93,6 +93,9 @@ class Group(db.Model):
     def remove_user(self, old_user):
         self.members.remove(old_user)
 
+    def remove_account(self, old_account):
+        self.accounts.remove(old_account)
+
     def __repr__(self):
         return f"<Group {self.id}, {self.name}>"
 
@@ -116,8 +119,8 @@ class Account(db.Model):
         new_account = cls()
         new_account.group = group
         new_account.name = name
-        new_account.is_live = user is not None
-        new_account.user = user
+        new_account.is_avatar = user is not None
+        new_account.avatar_for = user
         new_account.starting_balance = balance
         new_account.has_balance = balance is not None
         return new_account
