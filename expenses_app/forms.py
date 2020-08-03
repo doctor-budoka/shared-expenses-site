@@ -59,7 +59,7 @@ class AddAccountToGroup(FlaskForm):
     @classmethod
     def from_group(cls, group):
         add_form = cls()
-        users_with_avatars = set(account.avatar_for for account in group.accounts if account.is_avatar)
+        users_with_avatars = set(account.avatar_for for account in group.accounts if account.is_avatar and account.status == "live")
         add_form.user.choices = [
             (user.id, user.username) for user in group.members if user not in users_with_avatars
         ]
@@ -76,6 +76,6 @@ class RemoveAccountFromGroup(FlaskForm):
     def from_group(cls, group):
         remove_form = cls()
         remove_form.name.choices = [
-            (account.id, account.name) for account in group.accounts
+            (account.id, account.name) for account in group.accounts if account.status == "live"
         ]
         return remove_form

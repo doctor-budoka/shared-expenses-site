@@ -5,7 +5,9 @@
 <h3>Current accounts</h3>
 <ul>
 {% for account in group.accounts %}
-<li>{{ account.name }}{% if account.is_avatar %} ({{ account.avatar_for.username }}){% endif %}</li>
+    {% if account.status == "live" %}
+        <li>{{ account.name }}{% if account.is_avatar %} ({{ account.avatar_for.username }}){% endif %}</li>
+    {% endif %}
 {% endfor %}
 </ul>
 <h3>Remove accounts</h3>
