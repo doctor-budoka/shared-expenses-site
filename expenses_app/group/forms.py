@@ -53,6 +53,7 @@ class RemoveAccountFromGroup(FlaskForm):
     def from_group(cls, group):
         remove_form = cls()
         remove_form.name.choices = [
-            (account.id, account.name) for account in group.accounts if account.status == "live"
+            (account.id, account.name) for account in group.accounts
+            if account.status == "live" and not account.is_avatar
         ]
         return remove_form

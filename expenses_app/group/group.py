@@ -99,8 +99,11 @@ def add_account_to_group(group_name):
     if add_form.validate_on_submit():
         name = add_form.name.data
         name_exists = Account.query.filter(Account.name == name, Account.group_id == group.id).first()
-        if name_exists:
+        if name_exists and name_exists.status == "live":
             flash("The account name already exists in this group!")
+        elif name_exists:
+            name_exists.status = "removed"
+            db.session.commit()
         else:
             user_id = add_form.user.data
             user = User.query.get(user_id) if user_id > -1 else None
@@ -120,7 +123,6 @@ def remove_account_from_group(group_name):
     if remove_form.validate_on_submit():
         account_id = remove_form.name.data
         old_account = Account.query.get(account_id)
-        group.remove_account(old_account)
         old_account.status = "removed"
         db.session.commit()
 
