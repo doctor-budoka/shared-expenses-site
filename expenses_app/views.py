@@ -37,10 +37,8 @@ def group_access(group_name):
     group = group_from_group_name(group_name)
     if group and group.has_user(current_user):
         add_form = AddUserToGroup()
-        remove_form = RemoveUserFromGroup()
+        remove_form = RemoveUserFromGroup.from_group(group, current_user)
 
-        remove_form.username.choices = [
-            (member.id, member.username) for member in group.members if member != current_user]
         return render_template("group_access.html", group=group, add_form=add_form, remove_form=remove_form)
 
     return render_template("index.html", group=group)
@@ -50,9 +48,7 @@ def group_access(group_name):
 @login_required
 def remove_user_from_group(group_name):
     group = group_from_group_name(group_name)
-    remove_form = RemoveUserFromGroup()
-    remove_form.username.choices = [
-        (member.id, member.username) for member in group.members if member != current_user]
+    remove_form = RemoveUserFromGroup.from_group(group, current_user)
     if remove_form.validate_on_submit():
         user_id = remove_form.username.data
         old_user = User.query.get(user_id)
@@ -83,17 +79,8 @@ def group_accounts(group_name):
     group = group_from_group_name(group_name)
 
     if group and group.has_user(current_user):
-        add_form = AddAccountToGroup()
-        remove_form = RemoveAccountFromGroup()
-
-        users_with_avatars = set(account.avatar_for for account in group.accounts if account.is_avatar)
-        add_form.user.choices = [
-            (user.id, user.username) for user in group.members if user not in users_with_avatars
-        ]
-        add_form.user.choices.append((-1, "None"))
-        remove_form.name.choices = [
-            (account.id, account.name) for account in group.accounts
-        ]
+        add_form = AddAccountToGroup.from_group(group)
+        remove_form = RemoveAccountFromGroup.from_group(group)
         return render_template("group_accounts.html", group=group, add_form=add_form, remove_form=remove_form)
 
     return redirect(url_for(index))
@@ -103,7 +90,7 @@ def group_accounts(group_name):
 @login_required
 def add_account_to_group(group_name):
     group = group_from_group_name(group_name)
-    add_form = AddAccountToGroup()
+    add_form = AddAccountToGroup.from_group(group)
     if add_form.validate_on_submit():
         name = add_form.name.data
         name_exists = Account.query.filter(Account.name == name, Account.group_id == group.id).first()
@@ -113,7 +100,7 @@ def add_account_to_group(group_name):
             user_id = add_form.user.data
             user = User.query.get(user_id) if user_id > -1 else None
             has_balance = add_form.has_balance.data
-            balance = add_form.balance.data if has_balance else None
+            balance = add_form.starting_balance.data if has_balance else None
             Account.create_account(group, name, user, balance)
             db.session.commit()
 
