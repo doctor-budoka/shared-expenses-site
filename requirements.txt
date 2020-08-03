@@ -6,3 +6,4 @@ wtforms
 wtforms[email]
 python-dotenv
 werkzeug
+click
