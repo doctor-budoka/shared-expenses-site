@@ -1,14 +1,12 @@
 {% extends "layout.html" %}
 {% from "macros.html" import display_form_field %}
 {% block content %}
-<h2>Registration</h2>
-<form method="POST" action="{{ url_for('register') }}">
+<h2>Log In</h2>
+<form method="POST" action="{{ url_for('auth_bp.login') }}">
     {{ form.hidden_tag() }}
     {{ display_form_field(form.email) }}
-    {{ display_form_field(form.username) }}
     {{ display_form_field(form.password) }}
-    {{ display_form_field(form.confirm) }}
     <div>{{ form.submit }}</div>
 </form>
-<div>Already have an account? <a href="{{ url_for("login") }}">Log in</a> instead.</div>
+<div>Don't have an account? Try <a href="{{ url_for("auth_bp.register") }}">registering</a> instead.</div>
 {% endblock %}
